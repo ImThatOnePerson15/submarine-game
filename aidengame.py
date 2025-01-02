@@ -11,7 +11,7 @@ WIDTH, HEIGHT = 800, 600
 
 # Colors
 WHITE = (255, 255, 255)
-BLUE = (0, 0, 255)
+SKYBLUE = (0, 0, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
@@ -32,6 +32,18 @@ submarine_rect = submarine.get_rect(center=(WIDTH // 2, HEIGHT // 2))
 fish_img = pygame.image.load('carp.png')  # Replace with a valid path or use a placeholder
 fish_img = pygame.transform.scale(fish_img, (50, 30))
 
+trash_img = pygame.image.load('trash.png')  # Replace with a valid path or use a placeholder
+trash_img = pygame.transform.scale(trash_img, (50, 30))
+
+# Initialize game variables
+trash_list = []
+for _ in range(10):  # Create initial fish
+    x = random.randint(0, WIDTH)
+    y = random.randint(0, HEIGHT)
+    speedfortrash = random.randint(2, 5)
+    trash_list.append({"rect": pygame.Rect(x, y, 50, 30), "speedfortrash": speedfortrash})
+
+
 # Initialize game variables
 fish_list = []
 for _ in range(10):  # Create initial fish
@@ -49,8 +61,8 @@ font = pygame.font.Font(None, 36)
 # Game loop
 running = True
 while running:
-    screen.fill(BLUE)
-    
+    screen.fill(SKYBLUE)
+
     # Events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -75,6 +87,15 @@ while running:
             fish["rect"].y = random.randint(0, HEIGHT)
             fish["speed"] = random.randint(2, 5)
 
+
+    # Move fish
+    for trash in trash_list:
+        trash["rect"].x -= trash["speedfortrash"]
+        if trash["rect"].right < 0:  # Reset fish to right side
+            trash["rect"].x = WIDTH
+            trash["rect"].y = random.randint(0, HEIGHT)
+            trash["speedfortrash"] = random.randint(2, 5)
+
     # Check collisions
     for fish in fish_list:
         if submarine_rect.colliderect(fish["rect"]):
@@ -82,6 +103,14 @@ while running:
             fish["rect"].x = WIDTH
             fish["rect"].y = random.randint(0, HEIGHT)
             fish["speed"] = random.randint(2, 5)
+
+                # Check collisions
+    for trash in trash_list:
+        if submarine_rect.colliderect(trash["rect"]):
+            score += 500
+            trash["rect"].x = WIDTH
+            trash["rect"].y = random.randint(0, HEIGHT)
+            trash["speedfortrash"] = random.randint(2, 5)
 
     # Update score
     score += 1
@@ -92,6 +121,9 @@ while running:
     # Draw fish
     for fish in fish_list:
         screen.blit(fish_img, fish["rect"])
+
+    for trash in trash_list:
+        screen.blit(trash_img, trash["rect"])
 
     # Draw health bar
     pygame.draw.rect(screen, RED, (10, 10, 200, 20))
