@@ -19,6 +19,20 @@ BLACK = (0, 0, 0)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Underwater Submarine Game")
 
+FACTS1 = "There will be more plastic in the ocean than fish in the year 2050"
+FACTS2 = "There is about 500 dead zones in the oceans"
+FACTS3 = "8 million tons of plastic enters our ocean each year"
+FACTS4 = "100 million marine animals die each year from plastic waste alone"
+FACTS5 = "1 in 3 marine animals get found entangled in litter"
+FACTS6 = "The majority of marine animals cannot see the difference between food and plastic so they eat the plastic"
+FACTS7 = "The majority of the fish we consume as humans would have ingested plastic and microfibers"
+FACTS8 = "There are around 5.25 trillion trash in our oceans (estimated)"
+FACTS9 = "There is an ocean garbage patch twice the size of Texas"
+FACTS10 = "Plastic pollution has been found in the Mariana Trench"
+
+FACTS = [ FACTS1, FACTS2, FACTS3, FACTS4, FACTS5, FACTS6, FACTS7, FACTS8, FACTS9, FACTS10]
+RANDOM_FACT = random.choice(FACTS)
+
 # Clock for controlling frame rate
 clock = pygame.time.Clock()
 random_number = random.randint(0, 9)
@@ -117,6 +131,8 @@ while running:
         if score % PAUSE_COUNT == 0:
             paused = True
             random_number = random.randint(0, 9)
+            RANDOM_FACT = random.choice(FACTS)
+
 
     # Draw submarine
     screen.blit(submarine, submarine_rect)
@@ -137,7 +153,8 @@ while running:
 
     # Pause message
     if paused:
-        pause_text = font.render(f"Do you know: blah blah blah: random number {random_number}", True, WHITE)
+        # pause_text = font.render(f"Do you know: blah blah blah: random number {random_number}", True, WHITE)
+        pause_text = font.render(RANDOM_FACT, True, WHITE)
         screen.blit(pause_text, (WIDTH // 2 - 20, HEIGHT // 2 - 0))
 
     # Game over
@@ -150,7 +167,7 @@ while running:
 
     # Update display
     pygame.display.flip()
-    clock.tick(50)
+    clock.tick(100)
 
 # Quit pygame
 pygame.quit()
